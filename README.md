@@ -1,5 +1,7 @@
 # B-Tree
 
+![](https://github.com/ynamiki/btree/workflows/Continuous%20integration/badge.svg)
+
 An implementation of B-tree in C++ based on the paper:
 
 R. Bayer and E. McCreight. 1970. Organization and maintenance of large ordered indices. In Proceedings of the 1970 ACM SIGFIDET (now SIGMOD) Workshop on Data Description, Access and Control (SIGFIDET '70). Association for Computing Machinery, New York, NY, USA, 107-141. DOI:https://doi.org/10.1145/1734663.1734671
