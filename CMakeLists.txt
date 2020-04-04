@@ -13,7 +13,10 @@ include(FetchContent)
 FetchContent_Declare(googletest
   URL https://github.com/google/googletest/archive/release-1.10.0.tar.gz
 )
-FetchContent_MakeAvailable(googletest)
+FetchContent_Declare(spdlog
+  URL https://github.com/gabime/spdlog/archive/v1.5.0.tar.gz
+)
+FetchContent_MakeAvailable(googletest spdlog)
 
 enable_testing()
 
