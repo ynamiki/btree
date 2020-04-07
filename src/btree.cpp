@@ -16,11 +16,14 @@ BTree::BTree(const std::size_t k) : k(k), root(nullptr) {
 
 BTree::~BTree() { delete root; }
 
-bool BTree::retrieve(key_t key) const {
+bool BTree::retrieve(key_t key, std::stack<Node*>* path) const {
   spdlog::trace("retrieve {}", key);
 
   Node* p = root;
   while (p != nullptr) {
+    if (path != nullptr) {
+      path->push(p);
+    }
     auto r = p->find(key);
     if (r.first) {
       return true;
@@ -34,17 +37,12 @@ void BTree::insert(key_t key) {
   spdlog::trace("insert {}", key);
 
   std::stack<Node*> path;
-  Node* p = root;
-  while (p != nullptr) {
-    path.push(p);
-    auto r = p->find(key);
-    if (r.first) {
-      spdlog::debug("{} already exists", key);
-      return;
-    }
-    p = r.second;
+  if (retrieve(key, &path)) {
+    spdlog::debug("{} already exists", key);
+    return;
   }
 
+  Node* p = nullptr;
   Node* son = nullptr;
   while (!path.empty()) {
     p = path.top();

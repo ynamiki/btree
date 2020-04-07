@@ -2,6 +2,7 @@
 #define BTREE_BTREE_H_
 
 #include <cstddef>
+#include <stack>
 
 namespace btree {
 
@@ -17,7 +18,7 @@ class BTree {
   explicit BTree(const std::size_t k);
   ~BTree();
 
-  bool retrieve(key_t key) const;
+  bool retrieve(key_t key, std::stack<Node*>* path = nullptr) const;
   void insert(key_t key);
 };
 
