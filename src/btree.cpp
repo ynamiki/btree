@@ -61,4 +61,16 @@ void BTree::insert(key_t key) {
   root = new Node(k, {key}, {node, son});
 }
 
+void BTree::delete_(key_t key) {
+  spdlog::trace("delete {}", key);
+
+  std::stack<Node*> path;
+  if (!retrieve(key, &path)) {
+    spdlog::debug("nothing to delete");
+    return;
+  }
+
+  path.top()->delete_(key, &path);
+}
+
 }  // namespace btree

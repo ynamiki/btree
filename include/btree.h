@@ -20,6 +20,7 @@ class BTree {
 
   bool retrieve(key_t key, std::stack<Node*>* path = nullptr) const;
   void insert(key_t key);
+  void delete_(key_t key);
 };
 
 }  // namespace btree

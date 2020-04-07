@@ -30,4 +30,12 @@ TEST(NodeTest, Split) {
   EXPECT_TRUE(b->find(2).first);
 }
 
+TEST(NodeTest, Delete) {
+  Node n(1, {0, 1, 2}, {nullptr, nullptr, nullptr, nullptr});
+  n.delete_(1, nullptr);
+  EXPECT_TRUE(n.find(0).first);
+  EXPECT_FALSE(n.find(1).first);
+  EXPECT_TRUE(n.find(2).first);
+}
+
 }  // namespace
