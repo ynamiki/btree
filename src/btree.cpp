@@ -42,23 +42,23 @@ void BTree::insert(key_t key) {
     return;
   }
 
-  Node* p = nullptr;
+  Node* node = nullptr;
   Node* son = nullptr;
   while (!path.empty()) {
-    p = path.top();
+    node = path.top();
     path.pop();
 
-    bool full = p->full();
-    p->insert(key, son);
+    bool full = node->full();
+    node->insert(key, son);
     if (!full) {
       return;
     }
 
-    std::tie(key, son) = p->split();
+    std::tie(key, son) = node->split();
     spdlog::debug("splitted, insert {} to the father", key);
   }
   spdlog::debug("create a new root with {}", key);
-  root = new Node(k, {key}, {p, son});
+  root = new Node(k, {key}, {node, son});
 }
 
 }  // namespace btree
