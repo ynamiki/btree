@@ -16,6 +16,10 @@ BTree::BTree(const std::size_t k) : k(k), root(nullptr) {
 
 BTree::~BTree() { delete root; }
 
+std::size_t BTree::height() const noexcept {
+  return root == nullptr ? 0 : root->height();
+}
+
 bool BTree::retrieve(key_t key, std::stack<Node*>* path) const {
   spdlog::trace("retrieve {}", key);
 

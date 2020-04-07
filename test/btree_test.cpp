@@ -23,6 +23,16 @@ BTree construct_tree(const std::vector<key_t> keys) {
   return t;
 }
 
+TEST(BTreeTest, HeightWithEmpty) {
+  auto t = construct_tree({});
+  EXPECT_EQ(t.height(), 0);
+}
+
+TEST(BTreeTest, Height) {
+  auto t = construct_tree({0, 1, 2});
+  EXPECT_EQ(t.height(), 2);
+}
+
 TEST(BTreeTest, RetrieveWithEmptyTree) {
   auto t = construct_tree({});
   EXPECT_FALSE(t.retrieve(0));

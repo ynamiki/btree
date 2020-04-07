@@ -17,6 +17,16 @@ bool Node::full() const noexcept { return keys.size() == 2 * k; }
 
 bool Node::leaf() const noexcept { return sons[0] == nullptr; }
 
+std::size_t Node::height() const noexcept {
+  std::size_t h = 1;
+  Node* node = sons[0];
+  while (node != nullptr) {
+    ++h;
+    node = node->sons[0];
+  }
+  return h;
+}
+
 std::pair<bool, Node*> Node::find(key_t key) const {
   auto iter = std::lower_bound(keys.cbegin(), keys.cend(), key);
   if (iter == keys.cend() || *iter != key) {

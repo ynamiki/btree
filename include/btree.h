@@ -18,6 +18,7 @@ class BTree {
   explicit BTree(const std::size_t k);
   ~BTree();
 
+  std::size_t height() const noexcept;
   bool retrieve(key_t key, std::stack<Node*>* path = nullptr) const;
   void insert(key_t key);
   void delete_(key_t key);
