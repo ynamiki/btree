@@ -8,14 +8,12 @@ R. Bayer and E. McCreight. 1970. Organization and maintenance of large ordered i
 
 ## Prerequisites
 
-The following tools must be installed.
-
 - [CMake](https://cmake.org) version 3.14 or later.
-- [clang-format](https://clang.llvm.org/docs/ClangFormat.html)
-- [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
-- [Doxygen](http://www.doxygen.org/)
+- [clang-format](https://clang.llvm.org/docs/ClangFormat.html) (optional)
+- [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) (optional)
+- [Doxygen](http://www.doxygen.org/) (optional)
 
 ## Custom Targets
 
-- `format`: Format the codes based on [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
-- `html`: Generate documents in HTML.
+- `format`: Format the codes based on [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) (clang-format must be installed).
+- `html`: Generate documents in HTML (Doxygen must be installed).
