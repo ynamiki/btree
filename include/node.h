@@ -10,7 +10,7 @@
 
 namespace btree {
 
-class Node {
+class BTree::Node {
   const std::size_t k;
   std::vector<key_t> keys;
   std::vector<Node*> sons;

@@ -8,9 +8,11 @@ namespace btree {
 
 using key_t = int;
 
-class Node;
-
 class BTree {
+ public:
+  class Node;
+
+ private:
   const std::size_t k;
   Node* root;
 
