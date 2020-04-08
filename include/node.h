@@ -2,7 +2,6 @@
 #define BTREE_NODE_H_
 
 #include <cstddef>
-#include <stack>
 #include <utility>
 #include <vector>
 
@@ -25,11 +24,7 @@ class BTree::Node {
   std::pair<bool, Node*> find(key_t key) const;
   void insert(key_t key, Node* son);
   std::pair<key_t, Node*> split();
-  void delete_(key_t key, std::stack<Node*>* path);
-
- private:
-  void delete_on_leaf(key_t key);
-  void delete_on_non_leaf(key_t key, std::stack<Node*>* path);
+  void delete_(key_t key, Node* leaf = nullptr);
 };
 
 }  // namespace btree

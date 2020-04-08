@@ -80,7 +80,17 @@ void BTree::delete_(key_t key) {
     return;
   }
 
-  path.top()->delete_(key, &path);
+  auto node = path.top();
+  if (node->leaf()) {
+    node->delete_(key);
+  } else {
+    Node* n = node->sons[0];
+    while (n != nullptr) {
+      path.push(n);
+      n = n->sons[0];
+    }
+    node->delete_(key, path.top());
+  }
 }
 
 }  // namespace btree

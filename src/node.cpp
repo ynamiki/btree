@@ -45,42 +45,21 @@ std::pair<key_t, BTree::Node*> BTree::Node::split() {
   return {key, new BTree::Node(k, brother_keys, brother_sons)};
 }
 
-void BTree::Node::delete_(key_t key, std::stack<BTree::Node*>* path) {
-  if (leaf()) {
-    delete_on_leaf(key);
-  } else {
-    delete_on_non_leaf(key, path);
-  }
-}
-
-void BTree::Node::delete_on_leaf(key_t key) {
+void BTree::Node::delete_(key_t key, Node* leaf) {
   auto iter = std::lower_bound(keys.cbegin(), keys.cend(), key);
   if (iter == keys.cend() || *iter != key) {
     return;
   }
 
   auto i = iter - keys.cbegin();
-  keys.erase(iter);
-  sons.erase(sons.cbegin() + i + 1);
-}
-
-void BTree::Node::delete_on_non_leaf(key_t key,
-                                     std::stack<BTree::Node*>* path) {
-  auto iter = std::lower_bound(keys.cbegin(), keys.cend(), key);
-  if (iter == keys.cend() || *iter != key) {
-    return;
+  if (leaf == nullptr) {
+    keys.erase(iter);
+    sons.erase(sons.cbegin() + i + 1);
+  } else {
+    keys[i] = leaf->keys[0];
+    leaf->keys.erase(leaf->keys.cbegin());
+    leaf->sons.pop_back();
   }
-
-  Node* leaf = sons[0];
-  while (leaf != nullptr) {
-    path->push(leaf);
-    leaf = leaf->sons[0];
-  }
-
-  leaf = path->top();
-  keys[iter - keys.cbegin()] = leaf->keys[0];
-  leaf->keys.erase(leaf->keys.cbegin());
-  leaf->sons.pop_back();
 }
 
 }  // namespace btree
