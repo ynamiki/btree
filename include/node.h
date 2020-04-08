@@ -11,11 +11,11 @@
 namespace btree {
 
 class BTree::Node {
+ public:
   const std::size_t k;
   std::vector<key_t> keys;
   std::vector<Node*> sons;
 
- public:
   explicit Node(std::size_t k, std::vector<key_t> keys,
                 std::vector<Node*> sons);
   ~Node();
