@@ -22,7 +22,6 @@ class BTree::Node {
 
   bool full() const noexcept;
   bool leaf() const noexcept;
-  std::size_t height() const noexcept;
   std::pair<bool, Node*> find(key_t key) const;
   void insert(key_t key, Node* son);
   std::pair<key_t, Node*> split();

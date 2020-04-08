@@ -18,16 +18,6 @@ bool BTree::Node::full() const noexcept { return keys.size() == 2 * k; }
 
 bool BTree::Node::leaf() const noexcept { return sons[0] == nullptr; }
 
-std::size_t BTree::Node::height() const noexcept {
-  std::size_t h = 1;
-  Node* node = sons[0];
-  while (node != nullptr) {
-    ++h;
-    node = node->sons[0];
-  }
-  return h;
-}
-
 std::pair<bool, BTree::Node*> BTree::Node::find(key_t key) const {
   auto iter = std::lower_bound(keys.cbegin(), keys.cend(), key);
   if (iter == keys.cend() || *iter != key) {
