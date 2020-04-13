@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <stack>
+#include <vector>
 
 namespace btree {
 
@@ -23,6 +24,8 @@ class BTree {
   bool retrieve(key_t key, std::stack<Node*>* path = nullptr) const;
   void insert(key_t key);
   void delete_(key_t key);
+
+  void get_all_keys(std::vector<key_t>& all_keys) const;
 };
 
 }  // namespace btree

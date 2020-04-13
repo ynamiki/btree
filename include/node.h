@@ -25,6 +25,8 @@ class BTree::Node {
   void insert(key_t key, Node* son);
   std::pair<key_t, Node*> split();
   void delete_(key_t key, Node* leaf = nullptr);
+
+  void get_all_keys(std::vector<key_t>& all_keys) const;
 };
 
 }  // namespace btree

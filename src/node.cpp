@@ -1,6 +1,7 @@
 #include "node.h"
 
 #include <algorithm>
+#include <cstddef>
 
 namespace btree {
 
@@ -59,6 +60,20 @@ void BTree::Node::delete_(key_t key, Node* leaf) {
     keys[i] = leaf->keys[0];
     leaf->keys.erase(leaf->keys.cbegin());
     leaf->sons.pop_back();
+  }
+}
+
+void BTree::Node::get_all_keys(std::vector<key_t>& all_keys) const {
+  if (leaf()) {
+    all_keys.insert(all_keys.cend(), keys.begin(), keys.end());
+    return;
+  }
+
+  for (std::size_t i = 0; i < sons.size(); ++i) {
+    if (i != 0) {
+      all_keys.push_back(keys[i - 1]);
+    }
+    sons[i]->get_all_keys(all_keys);
   }
 }
 

@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
 using namespace btree;
@@ -81,6 +82,13 @@ TEST(BTreeTest, DeleteFromNonLeaf) {
   t.delete_(1);
   expect_not_contains(t, {1});
   expect_contains(t, {0, 2, 3, 4, 5});
+}
+
+TEST(BTreeTest, GetAllKeys) {
+  auto t = construct_tree({0, 1, 2, 3, 4, 5});
+  std::vector<key_t> keys;
+  t.get_all_keys(keys);
+  EXPECT_THAT(keys, testing::ElementsAre(0, 1, 2, 3, 4, 5));
 }
 
 }  // namespace

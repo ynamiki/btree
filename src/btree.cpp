@@ -93,4 +93,10 @@ void BTree::delete_(key_t key) {
   }
 }
 
+void BTree::get_all_keys(std::vector<key_t>& all_keys) const {
+  if (root != nullptr) {
+    root->get_all_keys(all_keys);
+  }
+}
+
 }  // namespace btree
