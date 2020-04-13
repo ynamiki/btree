@@ -35,13 +35,13 @@ void BTree::Node::insert(key_t key, Node* son) {
   sons.insert(sons.cbegin() + i + 1, son);
 }
 
-std::pair<key_t, BTree::Node*> BTree::Node::split() {
-  key_t key = keys[k];
-  std::vector<key_t> brother_keys(keys.cbegin() + k + 1, keys.cend());
-  std::vector<Node*> brother_sons(sons.cbegin() + k + 1, sons.cend());
+std::pair<key_t, BTree::Node*> BTree::Node::split(std::size_t i) {
+  key_t key = keys[i];
+  std::vector<key_t> brother_keys(keys.cbegin() + i + 1, keys.cend());
+  std::vector<Node*> brother_sons(sons.cbegin() + i + 1, sons.cend());
 
-  keys.erase(keys.cbegin() + k, keys.end());
-  sons.erase(sons.cbegin() + k + 1, sons.end());
+  keys.erase(keys.cbegin() + i, keys.cend());
+  sons.erase(sons.cbegin() + i + 1, sons.cend());
 
   return {key, new BTree::Node(k, brother_keys, brother_sons)};
 }
@@ -61,6 +61,23 @@ void BTree::Node::delete_(key_t key, Node* leaf) {
     leaf->keys.erase(leaf->keys.cbegin());
     leaf->sons.pop_back();
   }
+}
+
+void BTree::Node::catenate(key_t key, BTree::Node* brother) {
+  auto& bk = brother->keys;
+  auto& bs = brother->sons;
+
+  keys.push_back(key);
+  keys.insert(keys.cend(), bk.cbegin(), bk.cend());
+  sons.insert(sons.cend(), bs.cbegin(), bs.cend());
+
+  bk.clear();
+  bs.clear();
+}
+
+void BTree::Node::delete_at(std::size_t i) {
+  keys.erase(keys.cbegin() + i);
+  sons.erase(sons.cbegin() + i + 1);
 }
 
 void BTree::Node::get_all_keys(std::vector<key_t>& all_keys) const {
