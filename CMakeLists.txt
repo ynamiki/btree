@@ -2,11 +2,25 @@ cmake_minimum_required(VERSION 3.14)
 
 project(btree LANGUAGES CXX)
 
-# C++ 17 was supported since CMake 3.8
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+function(set_compile_features target)
+  set_target_properties(${target}
+    PROPERTIES
+      CXX_STANDARD_REQUIRED ON
+      CXX_EXTENSIONS OFF
+  )
+  target_compile_features(${target} PRIVATE cxx_std_17)
+endfunction()
+
+function(set_compile_warning_options target)
+  target_compile_options(${target} PRIVATE -Wall -Wextra)
+  find_program(CLANG_TIDY clang-tidy)
+  if(CLANG_TIDY)
+    set_target_properties(${target}
+      PROPERTIES
+        CXX_CLANG_TIDY ${CLANG_TIDY}
+    )
+  endif()
+endfunction()
 
 # FetchContent_MakeAvailable module was introduced in CMake 3.14
 include(FetchContent)
@@ -19,11 +33,6 @@ FetchContent_Declare(spdlog
 FetchContent_MakeAvailable(googletest spdlog)
 
 enable_testing()
-
-find_program(CLANG_TIDY clang-tidy)
-if(CLANG_TIDY)
-  set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY})
-endif(CLANG_TIDY)
 
 add_subdirectory(src)
 add_subdirectory(test)
