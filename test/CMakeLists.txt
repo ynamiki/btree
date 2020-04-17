@@ -1,4 +1,4 @@
-add_executable(btree_test btree_test.cpp)
+add_executable(btree_test btree_test.cpp integration_test.cpp)
 
 set_compile_features(btree_test)
 set_compile_warning_options(btree_test)
