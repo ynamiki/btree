@@ -28,8 +28,8 @@ class BTree {
   void get_all_keys(std::vector<key_t>& all_keys) const;
 
  private:
-  static bool catenate(Node* father, std::ptrdiff_t i);
-  static bool underflow(Node* father, std::ptrdiff_t i);
+  bool catenate(Node* father, std::ptrdiff_t i);
+  bool underflow(Node* father, std::ptrdiff_t i);
   void catenate_and_underflow(std::stack<Node*>& path);
 };
 

@@ -5,17 +5,14 @@
 
 namespace btree {
 
-BTree::Node::Node(std::size_t k, std::vector<key_t> keys,
-                  std::vector<Node*> sons)
-    : k(k), keys(keys), sons(sons) {}
+BTree::Node::Node(std::vector<key_t> keys, std::vector<Node*> sons)
+    : keys(keys), sons(sons) {}
 
 BTree::Node::~Node() {
   for (auto& n : sons) {
     delete n;
   }
 }
-
-bool BTree::Node::full() const noexcept { return keys.size() == 2 * k; }
 
 bool BTree::Node::leaf() const noexcept { return sons[0] == nullptr; }
 
@@ -43,7 +40,7 @@ std::pair<key_t, BTree::Node*> BTree::Node::split(std::size_t i) {
   keys.erase(keys.cbegin() + i, keys.cend());
   sons.erase(sons.cbegin() + i + 1, sons.cend());
 
-  return {key, new BTree::Node(k, brother_keys, brother_sons)};
+  return {key, new BTree::Node(brother_keys, brother_sons)};
 }
 
 void BTree::Node::delete_(key_t key, Node* leaf) {

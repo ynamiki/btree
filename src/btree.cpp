@@ -59,7 +59,7 @@ void BTree::insert(key_t key) {
     node = path.top();
     path.pop();
 
-    bool full = node->full();
+    bool full = node->keys.size() == 2 * k;
     node->insert(key, son);
     if (!full) {
       return;
@@ -69,7 +69,7 @@ void BTree::insert(key_t key) {
     spdlog::debug("splitted, insert {} to the father", key);
   }
   spdlog::debug("create a new root with {}", key);
-  root = new Node(k, {key}, {node, son});
+  root = new Node({key}, {node, son});
 }
 
 void BTree::delete_(key_t key) {
@@ -109,7 +109,7 @@ bool BTree::catenate(Node* father, std::ptrdiff_t i) {
 
   auto n1 = father->sons[i];
   auto n2 = father->sons[i + 1];
-  if (n1->keys.size() + 1 + n2->keys.size() > 2 * n1->k) {
+  if (n1->keys.size() + 1 + n2->keys.size() > 2 * k) {
     return false;
   }
 
