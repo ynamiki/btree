@@ -85,7 +85,7 @@ void BTree::delete_(key_t key) {
   if (node->leaf()) {
     node->delete_(key);
   } else {
-    Node* n = node->sons[0];
+    Node* n = node->find(key).second;
     while (n != nullptr) {
       path.push(n);
       n = n->sons[0];

@@ -21,11 +21,11 @@ bool BTree::Node::leaf() const noexcept { return sons[0] == nullptr; }
 
 std::pair<bool, BTree::Node*> BTree::Node::find(key_t key) const {
   auto iter = std::lower_bound(keys.cbegin(), keys.cend(), key);
+  auto i = iter - keys.cbegin();
   if (iter == keys.cend() || *iter != key) {
-    auto i = iter - keys.cbegin();
     return {false, sons[i]};
   }
-  return {true, nullptr};
+  return {true, sons[i + 1]};
 }
 
 void BTree::Node::insert(key_t key, Node* son) {
