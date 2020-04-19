@@ -5,90 +5,127 @@
 
 namespace btree {
 
-BTree::Node::Node(std::vector<key_t> keys, std::vector<Node*> sons)
+Node::Node(const std::vector<key_t> keys, const std::vector<Node*> sons)
     : keys(keys), sons(sons) {}
 
-BTree::Node::~Node() {
-  for (auto& n : sons) {
-    delete n;
+Node::~Node() {
+  for (auto& son : sons) {
+    delete son;
   }
 }
 
-bool BTree::Node::leaf() const noexcept { return sons[0] == nullptr; }
+key_t Node::key_at(std::size_t i) const { return keys[i]; }
 
-std::pair<bool, BTree::Node*> BTree::Node::find(key_t key) const {
+Node* Node::son_at(std::size_t i) const { return sons[i]; }
+
+std::size_t Node::size() const noexcept { return keys.size(); }
+
+bool Node::leaf() const { return sons[0] == nullptr; }
+
+bool Node::find(key_t key, std::size_t* i, Node** son) const {
   auto iter = std::lower_bound(keys.cbegin(), keys.cend(), key);
-  auto i = iter - keys.cbegin();
-  if (iter == keys.cend() || *iter != key) {
-    return {false, sons[i]};
+  if (i != nullptr) {
+    *i = iter - keys.cbegin();
   }
-  return {true, sons[i + 1]};
+  if (son != nullptr) {
+    *son = sons[iter - keys.cbegin()];
+  }
+  return (iter != keys.cend() && *iter == key);
 }
 
-void BTree::Node::insert(key_t key, Node* son) {
+std::size_t Node::find(const Node* son) const {
+  if (son->size() > 0) {
+    auto iter = std::lower_bound(keys.cbegin(), keys.cend(), son->keys[0]);
+    auto i = iter - keys.cbegin();
+    assert(sons[i] == son);
+    return i;
+  }
+
+  auto iter = std::find(sons.cbegin(), sons.cend(), son);
+  assert(iter != sons.cend());
+  return (iter - sons.cbegin());
+}
+
+void Node::insert(key_t key, Node* son) {
   auto iter = std::lower_bound(keys.cbegin(), keys.cend(), key);
   auto i = iter - keys.cbegin();
   keys.insert(iter, key);
   sons.insert(sons.cbegin() + i + 1, son);
 }
 
-std::pair<key_t, BTree::Node*> BTree::Node::split(std::size_t i) {
-  key_t key = keys[i];
+Node* Node::split(std::size_t i, key_t* key) {
+  *key = keys[i];
+
   std::vector<key_t> brother_keys(keys.cbegin() + i + 1, keys.cend());
   std::vector<Node*> brother_sons(sons.cbegin() + i + 1, sons.cend());
 
   keys.erase(keys.cbegin() + i, keys.cend());
   sons.erase(sons.cbegin() + i + 1, sons.cend());
 
-  return {key, new BTree::Node(brother_keys, brother_sons)};
+  return new Node(brother_keys, brother_sons);
 }
 
-void BTree::Node::delete_(key_t key, Node* leaf) {
+void Node::delete_(key_t key, Node* leaf) {
   auto iter = std::lower_bound(keys.cbegin(), keys.cend(), key);
-  if (iter == keys.cend() || *iter != key) {
-    return;
-  }
-
-  auto i = iter - keys.cbegin();
   if (leaf == nullptr) {
     keys.erase(iter);
-    sons.erase(sons.cbegin() + i + 1);
+    sons.pop_back();
   } else {
-    keys[i] = leaf->keys[0];
+    keys[iter - keys.cbegin()] = leaf->keys[0];
     leaf->keys.erase(leaf->keys.cbegin());
     leaf->sons.pop_back();
   }
 }
 
-void BTree::Node::catenate(key_t key, BTree::Node* brother) {
-  auto& bk = brother->keys;
-  auto& bs = brother->sons;
+void Node::catenate(std::size_t i) {
+  auto son1 = sons[i];
+  auto son2 = sons[i + 1];
 
-  keys.push_back(key);
-  keys.insert(keys.cend(), bk.cbegin(), bk.cend());
-  sons.insert(sons.cend(), bs.cbegin(), bs.cend());
-
-  bk.clear();
-  bs.clear();
-}
-
-void BTree::Node::delete_at(std::size_t i) {
+  son1->catenate(keys[i], son2);
   keys.erase(keys.cbegin() + i);
   sons.erase(sons.cbegin() + i + 1);
 }
 
-void BTree::Node::get_all_keys(std::vector<key_t>& all_keys) const {
+/**
+ * Catenate the given brother node to this node. The brother will be freed.
+ *
+ * @param[in] key A key between two nodes.
+ * @param[in] brother A brother node to be catenated.
+ */
+void Node::catenate(key_t key, Node* brother) {
+  keys.push_back(key);
+  keys.insert(keys.cend(), brother->keys.cbegin(), brother->keys.cend());
+  sons.insert(sons.cend(), brother->sons.cbegin(), brother->sons.cend());
+
+  brother->clear();
+  delete brother;
+}
+
+void Node::underflow(std::size_t i) {
+  auto son1 = sons[i];
+  auto son2 = sons[i + 1];
+
+  son1->catenate(keys[i], son2);
+  sons[i + 1] = son1->split(son1->size() / 2, &keys[i]);
+}
+
+void Node::get_all_keys(std::vector<key_t>& v) const {
   if (leaf()) {
-    all_keys.insert(all_keys.cend(), keys.begin(), keys.end());
+    v.insert(v.cend(), keys.begin(), keys.end());
     return;
   }
 
   for (std::size_t i = 0; i < sons.size(); ++i) {
     if (i != 0) {
-      all_keys.push_back(keys[i - 1]);
+      v.push_back(keys[i - 1]);
     }
-    sons[i]->get_all_keys(all_keys);
+    sons[i]->get_all_keys(v);
   }
+}
+
+void Node::clear() {
+  keys.clear();
+  sons.clear();
 }
 
 }  // namespace btree
