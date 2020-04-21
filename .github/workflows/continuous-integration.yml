@@ -7,8 +7,6 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-    - name: Install dependencies
-      run: sudo apt-get -y install clang-tidy
     - uses: actions/checkout@v2
     - name: Test
       run: |
