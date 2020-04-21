@@ -1,6 +1,7 @@
 #include "node.h"
 
 #include <algorithm>
+#include <cassert>
 #include <cstddef>
 
 namespace btree {
@@ -14,13 +15,22 @@ Node::~Node() {
   }
 }
 
-key_t Node::key_at(std::size_t i) const { return keys[i]; }
+key_t Node::key_at(std::size_t i) const {
+  assert(i < keys.size());
+  return keys[i];
+}
 
-Node* Node::son_at(std::size_t i) const { return sons[i]; }
+Node* Node::son_at(std::size_t i) const {
+  assert(i < sons.size());
+  return sons[i];
+}
 
 std::size_t Node::size() const noexcept { return keys.size(); }
 
-bool Node::leaf() const { return sons[0] == nullptr; }
+bool Node::leaf() const {
+  assert(sons.size() > 0);
+  return sons[0] == nullptr;
+}
 
 bool Node::find(key_t key, std::size_t* i, Node** son) const {
   auto iter = std::lower_bound(keys.cbegin(), keys.cend(), key);
@@ -48,6 +58,7 @@ std::size_t Node::find(const Node* son) const {
 
 void Node::insert(key_t key, Node* son) {
   auto iter = std::lower_bound(keys.cbegin(), keys.cend(), key);
+  assert(iter == keys.cend() || *iter != key);
   auto i = iter - keys.cbegin();
   keys.insert(iter, key);
   sons.insert(sons.cbegin() + i + 1, son);
@@ -67,6 +78,7 @@ Node* Node::split(std::size_t i, key_t* key) {
 
 void Node::delete_(key_t key, Node* leaf) {
   auto iter = std::lower_bound(keys.cbegin(), keys.cend(), key);
+  assert(iter != keys.cend() && *iter == key);
   if (leaf == nullptr) {
     keys.erase(iter);
     sons.pop_back();
@@ -78,6 +90,8 @@ void Node::delete_(key_t key, Node* leaf) {
 }
 
 void Node::catenate(std::size_t i) {
+  assert(i < sons.size() - 1);
+
   auto son1 = sons[i];
   auto son2 = sons[i + 1];
 
@@ -102,6 +116,8 @@ void Node::catenate(key_t key, Node* brother) {
 }
 
 void Node::underflow(std::size_t i) {
+  assert(i < sons.size() - 1);
+
   auto son1 = sons[i];
   auto son2 = sons[i + 1];
 
