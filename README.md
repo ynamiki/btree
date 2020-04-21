@@ -8,7 +8,7 @@ R. Bayer and E. McCreight. 1970. Organization and maintenance of large ordered i
 
 ## Prerequisites
 
-- [CMake](https://cmake.org) version 3.14 or later.
+- [CMake](https://cmake.org) version 3.14 or later
 - [clang-format](https://clang.llvm.org/docs/ClangFormat.html) (optional)
 - [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) (optional)
 - [Doxygen](http://www.doxygen.org/) (optional)
