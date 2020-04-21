@@ -13,6 +13,10 @@ R. Bayer and E. McCreight. 1970. Organization and maintenance of large ordered i
 - [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) (optional)
 - [Doxygen](http://www.doxygen.org/) (optional)
 
+## CMake Variables
+
+- CMAKE_BUILD_TYPE: Debug, Release, RelWithDebInfo or MinSizeRel.
+
 ## Custom Targets
 
 - `format`: Format the codes based on [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) (clang-format must be installed).
