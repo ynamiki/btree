@@ -16,6 +16,7 @@ R. Bayer and E. McCreight. 1970. Organization and maintenance of large ordered i
 ## CMake Variables
 
 - CMAKE_BUILD_TYPE: Debug, Release, RelWithDebInfo or MinSizeRel.
+- ENABLE_ADDRESS_SANITIZER: OFF (default) or ON.
 
 ## Custom Targets
 

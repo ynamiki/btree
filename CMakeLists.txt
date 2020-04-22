@@ -22,6 +22,8 @@ function(set_compile_warning_options target)
   endif()
 endfunction()
 
+option(ENABLE_ADDRESS_SANITIZER "Enable address sanitizer.")
+
 # FetchContent_MakeAvailable module was introduced in CMake 3.14
 include(FetchContent)
 FetchContent_Declare(googletest
