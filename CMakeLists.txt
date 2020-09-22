@@ -22,22 +22,27 @@ function(set_compile_warning_options target)
   endif()
 endfunction()
 
+include(CTest)
+
 option(ENABLE_ADDRESS_SANITIZER "Enable address sanitizer.")
 
 # FetchContent_MakeAvailable module was introduced in CMake 3.14
 include(FetchContent)
-FetchContent_Declare(googletest
-  URL https://github.com/google/googletest/archive/release-1.10.0.tar.gz
-)
 FetchContent_Declare(spdlog
   URL https://github.com/gabime/spdlog/archive/v1.5.0.tar.gz
 )
-FetchContent_MakeAvailable(googletest spdlog)
-
-enable_testing()
+FetchContent_MakeAvailable(spdlog)
 
 add_subdirectory(src)
-add_subdirectory(test)
+
+if(BUILD_TESTING)
+  FetchContent_Declare(googletest
+    URL https://github.com/google/googletest/archive/release-1.10.0.tar.gz
+  )
+  FetchContent_MakeAvailable(googletest)
+
+  add_subdirectory(test)
+endif()
 
 add_custom_target(format
   COMMAND           git ls-files '*.cpp' '*.h' | xargs clang-format -i --style=file
